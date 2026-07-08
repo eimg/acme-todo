@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>Todo</h1>
+      <p class="subtitle">Simple local list</p>
+    </header>
+
+    <form id="add-form" class="add-form">
+      <input id="new-todo" class="input" type="text" placeholder="Add a todo…" autocomplete="off" required />
+      <button class="btn" type="submit">Add</button>
+    </form>
+
+    <ul id="todo-list" class="todo-list" aria-live="polite"></ul>
+    <p id="empty" class="empty hidden">No todos yet.</p>
+  </main>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

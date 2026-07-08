@@ -1,0 +1,9 @@
+node_modules/
+dist/
+data/
+*.db
+.DS_Store
+.env
+
+# Helix
+.helix/runs/
