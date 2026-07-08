@@ -114,6 +114,13 @@ body {
   border-color: #5a2b31;
 }
 
+.todo-count {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: right;
+  margin: 0.5rem 0 0;
+}
+
 .empty {
   color: var(--muted);
   font-style: italic;

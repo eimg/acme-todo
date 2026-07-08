@@ -1,5 +1,6 @@
 const listEl = document.getElementById("todo-list");
 const emptyEl = document.getElementById("empty");
+const countEl = document.getElementById("todo-count");
 const form = document.getElementById("add-form");
 const input = document.getElementById("new-todo");
 
@@ -27,10 +28,13 @@ function render() {
   if (todos.length === 0) {
     listEl.innerHTML = "";
     emptyEl.classList.remove("hidden");
+    countEl.classList.add("hidden");
     return;
   }
 
   emptyEl.classList.add("hidden");
+  countEl.textContent = todos.length === 1 ? "1 item" : `${todos.length} items`;
+  countEl.classList.remove("hidden");
   listEl.innerHTML = todos
     .map(
       (todo) => `
