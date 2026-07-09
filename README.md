@@ -19,6 +19,7 @@ npm run dev
 | `POST` | `/api/todos` | `{ "text": "..." }` |
 | `PATCH` | `/api/todos/:id` | `{ "done": true }` or `{ "text": "..." }` |
 | `DELETE` | `/api/todos/:id` | Remove todo |
+| `DELETE` | `/api/todos/clear` | Remove all done todos |
 | `GET` | `/api/hello` | Say hello |
 
 Data is stored in `data/todos.db` (override with `TODO_APP_DATA_DIR`).

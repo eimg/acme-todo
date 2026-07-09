@@ -65,3 +65,8 @@ export function deleteTodo(db: Database.Database, id: number): boolean {
   const result = db.prepare("DELETE FROM todos WHERE id = ?").run(id);
   return result.changes > 0;
 }
+
+export function clearDone(db: Database.Database): number {
+  const result = db.prepare("DELETE FROM todos WHERE done = 1").run();
+  return result.changes;
+}

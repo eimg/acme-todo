@@ -2,7 +2,7 @@ import express, { type Express } from "express";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import type Database from "better-sqlite3";
-import { createTodo, deleteTodo, updateTodo, listTodos } from "./todos.js";
+import { createTodo, deleteTodo, updateTodo, listTodos, clearDone } from "./todos.js";
 import { DEFAULT_PORT } from "./types.js";
 
 const publicDir = join(dirname(fileURLToPath(import.meta.url)), "public");
@@ -60,6 +60,11 @@ export function createApp(opts: CreateAppOptions): Express {
     } catch (err) {
       res.status(400).json({ error: err instanceof Error ? err.message : String(err) });
     }
+  });
+
+  app.delete("/api/todos/clear", (_req, res) => {
+    const count = clearDone(db);
+    res.json({ cleared: count });
   });
 
   app.delete("/api/todos/:id", (req, res) => {

@@ -49,4 +49,18 @@ describe("todo-app API", () => {
     const list = await request(app).get("/api/todos").expect(200);
     assert.equal(list.body.find((t: { id: number }) => t.id === id), undefined);
   });
+
+  it("clears all done todos", async () => {
+    const a = await request(app).post("/api/todos").send({ text: "A" }).expect(201);
+    const b = await request(app).post("/api/todos").send({ text: "B" }).expect(201);
+
+    await request(app).patch(`/api/todos/${a.body.id}`).send({ done: true }).expect(200);
+    await request(app).patch(`/api/todos/${b.body.id}`).send({ done: true }).expect(200);
+
+    const res = await request(app).delete("/api/todos/clear").expect(200);
+    assert.ok(res.body.cleared >= 2);
+
+    const list = await request(app).get("/api/todos").expect(200);
+    assert.equal(list.body.every((t: { done: boolean }) => !t.done), true);
+  });
 });
