@@ -33,7 +33,17 @@ function render() {
   }
 
   emptyEl.classList.add("hidden");
-  countEl.textContent = todos.length === 1 ? "1 item" : `${todos.length} items`;
+  const todoCount = todos.filter((t) => !t.done).length;
+  const doneCount = todos.length - todoCount;
+  if (todoCount === 0 && doneCount === 0) {
+    countEl.textContent = "";
+  } else if (todoCount === 0) {
+    countEl.textContent = `${doneCount} done`;
+  } else if (doneCount === 0) {
+    countEl.textContent = todoCount === 1 ? "1 todo" : `${todoCount} todos`;
+  } else {
+    countEl.textContent = `${todoCount} todo, ${doneCount} done`;
+  }
   countEl.classList.remove("hidden");
   listEl.innerHTML = todos
     .map(
