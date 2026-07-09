@@ -86,6 +86,11 @@ body {
   text-decoration: line-through;
 }
 
+/* Add space before the first done item when it follows an open item */
+.todo-item:not(.done) + .todo-item.done {
+  margin-top: 1rem;
+}
+
 .todo-text {
   flex: 1;
   font-size: 0.95rem;
