@@ -63,4 +63,18 @@ describe("todo-app API", () => {
     const list = await request(app).get("/api/todos").expect(200);
     assert.equal(list.body.every((t: { done: boolean }) => !t.done), true);
   });
+
+  it("edits todo text via PATCH", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "Original" }).expect(201);
+    const id = created.body.id as number;
+    const edited = await request(app).patch(`/api/todos/${id}`).send({ text: "Updated" }).expect(200);
+    assert.equal(edited.body.text, "Updated");
+    assert.equal(edited.body.done, false);
+  });
+
+  it("rejects empty text on PATCH", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "Item" }).expect(201);
+    const id = created.body.id as number;
+    await request(app).patch(`/api/todos/${id}`).send({ text: "" }).expect(400);
+  });
 });

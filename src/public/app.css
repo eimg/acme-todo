@@ -119,6 +119,75 @@ body {
   border-color: #5a2b31;
 }
 
+.todo-edit {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.todo-edit:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.todo-edit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.todo-edit-input {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.todo-edit-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.todo-save {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.todo-save:hover {
+  opacity: 0.9;
+}
+
+.todo-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.todo-cancel:hover {
+  color: #e35d6a;
+  border-color: #5a2b31;
+}
+
 .todo-count {
   color: var(--muted);
   font-size: 0.85rem;

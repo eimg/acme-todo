@@ -48,9 +48,10 @@ function render() {
   listEl.innerHTML = todos
     .map(
       (todo) => `
-      <li class="todo-item ${todo.done ? "done" : ""}" data-id="${todo.id}">
+      <li class="todo-item ${todo.done ? "done" : ""}" data-id="${todo.id}" data-text="${escapeHtml(todo.text)}">
         <input class="todo-check" type="checkbox" ${todo.done ? "checked" : ""} aria-label="Toggle done" />
         <span class="todo-text">${escapeHtml(todo.text)}</span>
+        <button class="todo-edit" type="button">Edit</button>
         <button class="todo-delete" type="button">Delete</button>
       </li>`
     )
@@ -65,6 +66,9 @@ function render() {
         body: JSON.stringify({ done }),
       });
       await loadTodos();
+    });
+    item.querySelector(".todo-edit").addEventListener("click", () => {
+      startEdit(item, id);
     });
     item.querySelector(".todo-delete").addEventListener("click", async () => {
       await api(`/api/todos/${id}`, { method: "DELETE" });
@@ -84,6 +88,75 @@ form.addEventListener("submit", async (e) => {
   input.value = "";
   await loadTodos();
 });
+
+function startEdit(item, id) {
+  const textSpan = item.querySelector(".todo-text");
+  const editBtn = item.querySelector(".todo-edit");
+  const deleteBtn = item.querySelector(".todo-delete");
+  const check = item.querySelector(".todo-check");
+  const originalText = item.dataset.text;
+
+  editBtn.disabled = true;
+  editBtn.style.display = "none";
+  deleteBtn.style.display = "none";
+  check.style.display = "none";
+  textSpan.style.display = "none";
+
+  const inputEl = document.createElement("input");
+  inputEl.className = "todo-edit-input";
+  inputEl.value = originalText;
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "todo-save";
+  saveBtn.type = "button";
+  saveBtn.textContent = "Save";
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "todo-cancel";
+  cancelBtn.type = "button";
+  cancelBtn.textContent = "Cancel";
+
+  textSpan.parentNode.insertBefore(inputEl, editBtn);
+  textSpan.parentNode.insertBefore(saveBtn, editBtn);
+  textSpan.parentNode.insertBefore(cancelBtn, editBtn);
+
+  inputEl.focus();
+  inputEl.select();
+
+  async function save() {
+    const newValue = inputEl.value.trim();
+    if (!newValue) {
+      inputEl.value = "";
+      inputEl.focus();
+      return;
+    }
+    try {
+      await api(`/api/todos/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ text: newValue }),
+      });
+      await loadTodos();
+    } catch (err) {
+      console.error("Edit failed:", err);
+    }
+  }
+
+  function cancel() {
+    loadTodos();
+  }
+
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      save();
+    }
+    if (e.key === "Escape") {
+      cancel();
+    }
+  });
+  saveBtn.addEventListener("click", save);
+  cancelBtn.addEventListener("click", cancel);
+}
 
 function escapeHtml(text) {
   return String(text)
