@@ -141,10 +141,14 @@ body {
   border: 1px solid var(--border);
   color: var(--muted);
   border-radius: 6px;
-  padding: 0.2rem 0.45rem;
+  padding: 0.35rem;
   cursor: pointer;
   font: inherit;
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 
 .todo-delete:hover {
@@ -157,10 +161,14 @@ body {
   border: 1px solid var(--border);
   color: var(--muted);
   border-radius: 6px;
-  padding: 0.2rem 0.45rem;
+  padding: 0.35rem;
   cursor: pointer;
   font: inherit;
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 
 .todo-edit:hover {
