@@ -68,6 +68,9 @@ body {
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
   white-space: nowrap;
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
 }
 
 .priority-high {
@@ -107,7 +110,6 @@ body {
 .todo-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -122,6 +124,24 @@ body {
 /* Add space before the first done item when it follows an open item */
 .todo-item:not(.done) + .todo-item.done {
   margin-top: 1rem;
+}
+
+.todo-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--border);
 }
 
 .todo-text {
