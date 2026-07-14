@@ -32,10 +32,12 @@ describe("todo-app API", () => {
     const created = await request(app).post("/api/todos").send({ text: "Buy milk" }).expect(201);
     assert.equal(created.body.text, "Buy milk");
     assert.equal(created.body.done, false);
+    assert.equal(created.body.priority, "medium");
 
     const list = await request(app).get("/api/todos").expect(200);
     assert.equal(list.body.length, 1);
     assert.equal(list.body[0].text, "Buy milk");
+    assert.equal(list.body[0].priority, "medium");
   });
 
   it("toggles and deletes a todo", async () => {
@@ -76,5 +78,23 @@ describe("todo-app API", () => {
     const created = await request(app).post("/api/todos").send({ text: "Item" }).expect(201);
     const id = created.body.id as number;
     await request(app).patch(`/api/todos/${id}`).send({ text: "" }).expect(400);
+  });
+
+  it("creates a todo with explicit priority", async () => {
+    const res = await request(app).post("/api/todos").send({ text: "Urgent task", priority: "high" }).expect(201);
+    assert.equal(res.body.priority, "high");
+  });
+
+  it("updates todo priority via PATCH", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "Shiftable" }).expect(201);
+    const id = created.body.id as number;
+    assert.equal(created.body.priority, "medium");
+
+    const updated = await request(app).patch(`/api/todos/${id}`).send({ priority: "low" }).expect(200);
+    assert.equal(updated.body.priority, "low");
+  });
+
+  it("rejects invalid priority on POST", async () => {
+    await request(app).post("/api/todos").send({ text: "Bad", priority: "critical" }).expect(400);
   });
 });

@@ -32,12 +32,15 @@ export function createApp(opts: CreateAppOptions): Express {
 
   app.post("/api/todos", (req, res) => {
     try {
-      const body = req.body as { text?: string };
+      const body = req.body as { text?: string; priority?: string };
       if (typeof body.text !== "string") {
         res.status(400).json({ error: "text is required" });
         return;
       }
-      const todo = createTodo(db, { text: body.text });
+      const todo = createTodo(db, {
+        text: body.text,
+        priority: body.priority as "low" | "medium" | "high" | undefined,
+      });
       res.status(201).json(todo);
     } catch (err) {
       res.status(400).json({ error: err instanceof Error ? err.message : String(err) });
@@ -46,11 +49,12 @@ export function createApp(opts: CreateAppOptions): Express {
 
   app.patch("/api/todos/:id", (req, res) => {
     const id = Number(req.params.id);
-    const body = req.body as { text?: string; done?: boolean };
+    const body = req.body as { text?: string; done?: boolean; priority?: string };
     try {
       const todo = updateTodo(db, id, {
         text: typeof body.text === "string" ? body.text : undefined,
         done: typeof body.done === "boolean" ? body.done : undefined,
+        priority: typeof body.priority === "string" ? (body.priority as "low" | "medium" | "high") : undefined,
       });
       if (!todo) {
         res.status(404).json({ error: "Todo not found" });
