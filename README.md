@@ -4,21 +4,21 @@ A minimal local todo list — one project, one list. Independent from Helix and 
 
 ## Acme development testbed
 
-Acme Todo is one of four related local projects. They remain separate products with separate responsibilities.
+Acme Todo is one of four related projects. They remain separate products with separate responsibilities.
 
-| Project | Local path | Role |
-|---|---|---|
-| **Primer** | `~/Desktop/acme/primer` | Knowledge product and fictional Acme evidence corpus; not currently part of the runtime loop. |
-| **Helix** | `~/Desktop/acme/helix` | Agent workflow control plane that receives work and orchestrates changes. |
-| **Acme Issues** | `~/Desktop/acme/acme-issues` | Local issue tracker and webhook harness that triggers Helix and receives callbacks. |
-| **Acme Todo** | `~/Desktop/acme/acme-todo` | Disposable target application used for agent implementation and verification. |
+| Project | Role |
+|---|---|
+| **[Primer](https://github.com/eimg/primer)** | Knowledge product and fictional Acme evidence corpus; not currently part of the runtime loop. |
+| **[Helix](https://github.com/eimg/helix)** | Agent workflow control plane that receives work and orchestrates changes. |
+| **[Acme Issues](https://github.com/eimg/acme-issues)** | Local issue tracker and webhook harness that triggers Helix and receives callbacks. |
+| **[Acme Todo](https://github.com/eimg/acme-todo)** | Disposable target application used for agent implementation and verification. |
 
 Typical exercise: Acme Issues sends a work item to Helix, which makes and verifies changes in Acme Todo. Primer develops the separate knowledge and retrieval side of the same fictional Acme context.
 
 ## Quick start
 
 ```bash
-cd ~/Desktop/acme/acme-todo
+cd acme-todo
 npm install
 npm run dev
 # → http://127.0.0.1:8330/
@@ -44,7 +44,7 @@ This repo is the **target project** Helix works on. Helix is globally installed 
 ### 1. Initialize Helix in this repo
 
 ```bash
-cd ~/Desktop/acme/acme-todo
+cd acme-todo
 helix init --preset express
 export OPENROUTER_API_KEY=...
 ```
@@ -52,7 +52,7 @@ export OPENROUTER_API_KEY=...
 ### 2. Run Helix on a task (inline)
 
 ```bash
-cd ~/Desktop/acme/acme-todo
+cd acme-todo
 helix run --title "Add due dates to todos" --body "Store optional due date on each todo"
 ```
 
@@ -65,7 +65,7 @@ helix serve
 
 ### 3. Track work in Acme Issues
 
-In Acme Issues at `~/Desktop/acme/acme-issues`:
+In Acme Issues:
 
 1. **Settings** → webhook URL `http://127.0.0.1:8319/runs`, enable webhooks
 2. Create an issue with the `trigger` label describing the acme-todo task
