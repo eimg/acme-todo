@@ -7,13 +7,13 @@ import request from "supertest";
 import { openDatabase } from "../src/db.js";
 import { createApp } from "../src/app.js";
 
-describe("todo-app API", () => {
+describe("acme-todo API", () => {
   let dataDir: string;
   let db: ReturnType<typeof openDatabase>;
   let app: ReturnType<typeof createApp>;
 
   before(() => {
-    dataDir = mkdtempSync(join(tmpdir(), "todo-app-"));
+    dataDir = mkdtempSync(join(tmpdir(), "acme-todo-"));
     db = openDatabase(dataDir);
     app = createApp({ db });
   });
@@ -32,10 +32,12 @@ describe("todo-app API", () => {
     const created = await request(app).post("/api/todos").send({ text: "Buy milk" }).expect(201);
     assert.equal(created.body.text, "Buy milk");
     assert.equal(created.body.done, false);
+    assert.equal(created.body.priority, "medium");
 
     const list = await request(app).get("/api/todos").expect(200);
     assert.equal(list.body.length, 1);
     assert.equal(list.body[0].text, "Buy milk");
+    assert.equal(list.body[0].priority, "medium");
   });
 
   it("toggles and deletes a todo", async () => {
@@ -62,5 +64,56 @@ describe("todo-app API", () => {
 
     const list = await request(app).get("/api/todos").expect(200);
     assert.equal(list.body.every((t: { done: boolean }) => !t.done), true);
+  });
+
+  it("edits todo text via PATCH", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "Original" }).expect(201);
+    const id = created.body.id as number;
+    const edited = await request(app).patch(`/api/todos/${id}`).send({ text: "Updated" }).expect(200);
+    assert.equal(edited.body.text, "Updated");
+    assert.equal(edited.body.done, false);
+  });
+
+  it("rejects empty text on PATCH", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "Item" }).expect(201);
+    const id = created.body.id as number;
+    await request(app).patch(`/api/todos/${id}`).send({ text: "" }).expect(400);
+  });
+
+  it("creates a todo with explicit priority", async () => {
+    const res = await request(app).post("/api/todos").send({ text: "Urgent task", priority: "high" }).expect(201);
+    assert.equal(res.body.priority, "high");
+  });
+
+  it("updates todo priority via PATCH", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "Shiftable" }).expect(201);
+    const id = created.body.id as number;
+    assert.equal(created.body.priority, "medium");
+
+    const updated = await request(app).patch(`/api/todos/${id}`).send({ priority: "low" }).expect(200);
+    assert.equal(updated.body.priority, "low");
+  });
+
+  it("rejects invalid priority on POST", async () => {
+    await request(app).post("/api/todos").send({ text: "Bad", priority: "critical" }).expect(400);
+  });
+
+  it("rejects text exceeding MAX_TEXT_LENGTH", async () => {
+    const longText = "a".repeat(1001);
+    await request(app).post("/api/todos").send({ text: longText }).expect(400);
+  });
+
+  it("rejects zero and negative ids", async () => {
+    await request(app).delete("/api/todos/0").expect(400);
+    await request(app).delete("/api/todos/-1").expect(400);
+  });
+
+  it("rejects non-numeric ids", async () => {
+    await request(app).delete("/api/todos/abc").expect(400);
+  });
+
+  it("rejects PATCH with empty body", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "X" }).expect(201);
+    await request(app).patch(`/api/todos/${created.body.id}`).send({}).expect(400);
   });
 });

@@ -4,10 +4,10 @@ import { startServer, DEFAULT_PORT } from "./app.js";
 
 function usage(): never {
   console.error(`Usage:
-  todo-app serve [--port <n>] [--host <host>]
+  acme-todo serve [--port <n>] [--host <host>]
 
 Environment:
-  TODO_APP_DATA_DIR   SQLite data directory (default: ./data)
+  ACME_TODO_DATA_DIR   SQLite data directory (default: ./data)
   PORT                Default port if --port not given`);
   process.exit(2);
 }

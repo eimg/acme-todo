@@ -1,18 +1,24 @@
 import type Database from "better-sqlite3";
-import type { Todo, TodoInput, TodoUpdate } from "./types.js";
+import type { Todo, TodoInput, TodoUpdate, Priority } from "./types.js";
+import { VALID_PRIORITIES, MAX_TEXT_LENGTH } from "./types.js";
 
 interface TodoRow {
   id: number;
   text: string;
+  priority: string;
   done: number;
   created_at: number;
   updated_at: number;
 }
 
 function toTodo(row: TodoRow): Todo {
+  const priority = VALID_PRIORITIES.includes(row.priority as Priority)
+    ? (row.priority as Priority)
+    : "medium";
   return {
     id: row.id,
     text: row.text,
+    priority,
     done: row.done === 1,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -34,13 +40,18 @@ export function getTodo(db: Database.Database, id: number): Todo | null {
 export function createTodo(db: Database.Database, input: TodoInput): Todo {
   const text = input.text.trim();
   if (!text) throw new Error("text is required");
+  if (text.length > MAX_TEXT_LENGTH) throw new Error(`text must be at most ${MAX_TEXT_LENGTH} characters`);
+  const priority: Priority = input.priority ?? "medium";
+  if (!VALID_PRIORITIES.includes(priority)) {
+    throw new Error(`Invalid priority: ${priority}`);
+  }
   const now = Date.now();
   const result = db
     .prepare(
-      `INSERT INTO todos (text, done, created_at, updated_at)
-       VALUES (@text, 0, @now, @now)`
+      `INSERT INTO todos (text, priority, done, created_at, updated_at)
+       VALUES (@text, @priority, 0, @now, @now)`
     )
-    .run({ text, now });
+    .run({ text, priority, now });
   return getTodo(db, Number(result.lastInsertRowid))!;
 }
 
@@ -50,13 +61,18 @@ export function updateTodo(db: Database.Database, id: number, patch: TodoUpdate)
 
   const text = patch.text !== undefined ? patch.text.trim() : existing.text;
   if (!text) throw new Error("text is required");
+  if (patch.text !== undefined && text.length > MAX_TEXT_LENGTH) throw new Error(`text must be at most ${MAX_TEXT_LENGTH} characters`);
 
   const done = patch.done ?? existing.done;
+  const priority: Priority = patch.priority ?? existing.priority;
+  if (!VALID_PRIORITIES.includes(priority)) {
+    throw new Error(`Invalid priority: ${priority}`);
+  }
   const now = Date.now();
 
   db.prepare(
-    `UPDATE todos SET text = @text, done = @done, updated_at = @now WHERE id = @id`
-  ).run({ id, text, done: done ? 1 : 0, now });
+    `UPDATE todos SET text = @text, priority = @priority, done = @done, updated_at = @now WHERE id = @id`
+  ).run({ id, text, priority, done: done ? 1 : 0, now });
 
   return getTodo(db, id);
 }
