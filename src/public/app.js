@@ -112,9 +112,10 @@ function startEdit(item, id) {
   const inputEl = document.createElement("input");
   inputEl.className = "todo-edit-input";
   inputEl.value = originalText;
+  inputEl.maxLength = 1000;
 
   const editPrioritySelect = document.createElement("select");
-  editPrioritySelect.className = "input priority-select";
+  editPrioritySelect.className = "todo-edit-select";
   for (const level of ["low", "medium", "high"]) {
     const opt = document.createElement("option");
     opt.value = level;
@@ -181,7 +182,8 @@ function escapeHtml(text) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#x27;");
 }
 
 loadTodos().catch((err) => {

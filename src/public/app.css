@@ -212,6 +212,19 @@ body {
   font-size: 0.95rem;
 }
 
+.todo-edit-select {
+  flex: 0 0 auto;
+  min-width: 90px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
 .todo-edit-input:focus {
   outline: none;
   border-color: var(--accent);

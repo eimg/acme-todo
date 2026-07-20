@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 export function resolveDataDir(): string {
-  return process.env.TODO_APP_DATA_DIR ?? join(projectRoot, "data");
+  return process.env.ACME_TODO_DATA_DIR ?? process.env.TODO_APP_DATA_DIR ?? join(projectRoot, "data");
 }
 
 export function openDatabase(dataDir = resolveDataDir()): Database.Database {
@@ -14,7 +14,17 @@ export function openDatabase(dataDir = resolveDataDir()): Database.Database {
   const db = new Database(join(dataDir, "todos.db"));
   db.pragma("journal_mode = WAL");
   migrate(db);
+  setupGracefulShutdown(db);
   return db;
+}
+
+function setupGracefulShutdown(db: Database.Database): void {
+  const close = () => {
+    db.close();
+    process.exit(0);
+  };
+  process.on("SIGINT", close);
+  process.on("SIGTERM", close);
 }
 
 function migrate(db: Database.Database): void {

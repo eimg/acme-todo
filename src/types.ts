@@ -23,3 +23,5 @@ export interface TodoUpdate {
 }
 
 export const DEFAULT_PORT = 8330;
+
+export const MAX_TEXT_LENGTH = 1000;

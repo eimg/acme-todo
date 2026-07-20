@@ -7,3 +7,6 @@ data/
 
 # Helix
 .helix/runs/
+.helix/runs.db
+.helix/runs.db-shm
+.helix/runs.db-wal

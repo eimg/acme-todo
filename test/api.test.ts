@@ -7,13 +7,13 @@ import request from "supertest";
 import { openDatabase } from "../src/db.js";
 import { createApp } from "../src/app.js";
 
-describe("todo-app API", () => {
+describe("acme-todo API", () => {
   let dataDir: string;
   let db: ReturnType<typeof openDatabase>;
   let app: ReturnType<typeof createApp>;
 
   before(() => {
-    dataDir = mkdtempSync(join(tmpdir(), "todo-app-"));
+    dataDir = mkdtempSync(join(tmpdir(), "acme-todo-"));
     db = openDatabase(dataDir);
     app = createApp({ db });
   });
@@ -96,5 +96,24 @@ describe("todo-app API", () => {
 
   it("rejects invalid priority on POST", async () => {
     await request(app).post("/api/todos").send({ text: "Bad", priority: "critical" }).expect(400);
+  });
+
+  it("rejects text exceeding MAX_TEXT_LENGTH", async () => {
+    const longText = "a".repeat(1001);
+    await request(app).post("/api/todos").send({ text: longText }).expect(400);
+  });
+
+  it("rejects zero and negative ids", async () => {
+    await request(app).delete("/api/todos/0").expect(400);
+    await request(app).delete("/api/todos/-1").expect(400);
+  });
+
+  it("rejects non-numeric ids", async () => {
+    await request(app).delete("/api/todos/abc").expect(400);
+  });
+
+  it("rejects PATCH with empty body", async () => {
+    const created = await request(app).post("/api/todos").send({ text: "X" }).expect(201);
+    await request(app).patch(`/api/todos/${created.body.id}`).send({}).expect(400);
   });
 });

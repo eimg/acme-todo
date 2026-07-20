@@ -1,6 +1,6 @@
 import type Database from "better-sqlite3";
 import type { Todo, TodoInput, TodoUpdate, Priority } from "./types.js";
-import { VALID_PRIORITIES } from "./types.js";
+import { VALID_PRIORITIES, MAX_TEXT_LENGTH } from "./types.js";
 
 interface TodoRow {
   id: number;
@@ -40,6 +40,7 @@ export function getTodo(db: Database.Database, id: number): Todo | null {
 export function createTodo(db: Database.Database, input: TodoInput): Todo {
   const text = input.text.trim();
   if (!text) throw new Error("text is required");
+  if (text.length > MAX_TEXT_LENGTH) throw new Error(`text must be at most ${MAX_TEXT_LENGTH} characters`);
   const priority: Priority = input.priority ?? "medium";
   if (!VALID_PRIORITIES.includes(priority)) {
     throw new Error(`Invalid priority: ${priority}`);
@@ -60,6 +61,7 @@ export function updateTodo(db: Database.Database, id: number, patch: TodoUpdate)
 
   const text = patch.text !== undefined ? patch.text.trim() : existing.text;
   if (!text) throw new Error("text is required");
+  if (patch.text !== undefined && text.length > MAX_TEXT_LENGTH) throw new Error(`text must be at most ${MAX_TEXT_LENGTH} characters`);
 
   const done = patch.done ?? existing.done;
   const priority: Priority = patch.priority ?? existing.priority;
