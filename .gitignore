@@ -10,3 +10,4 @@ data/
 .helix/runs.db
 .helix/runs.db-shm
 .helix/runs.db-wal
+.helix/pr-reviews.db*
