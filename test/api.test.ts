@@ -120,6 +120,10 @@ describe("acme-todo API", () => {
   it("serves index.html with theme toggle button", async () => {
     const res = await request(app).get("/").expect(200);
     assert.ok(res.text.includes("id=\"theme-toggle\""), "should contain #theme-toggle element");
+    assert.ok(
+      res.text.includes('class="header-top"'),
+      "should contain header-top wrapper for toggle placement"
+    );
   });
 
   it("serves index.html with theme-init.js script", async () => {
