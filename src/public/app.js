@@ -1,3 +1,27 @@
+// --- Theme toggle ---
+const toggleBtn = document.getElementById("theme-toggle");
+
+function getEffectiveTheme() {
+  if (document.documentElement.dataset.theme) return document.documentElement.dataset.theme;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function syncToggleUI() {
+  const theme = getEffectiveTheme();
+  toggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+  toggleBtn.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " mode");
+}
+
+if (toggleBtn) {
+  syncToggleUI();
+  toggleBtn.addEventListener("click", () => {
+    const next = getEffectiveTheme() === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("acme-todo-theme", next);
+    syncToggleUI();
+  });
+}
+
 const listEl = document.getElementById("todo-list");
 const emptyEl = document.getElementById("empty");
 const countEl = document.getElementById("todo-count");

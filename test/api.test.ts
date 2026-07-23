@@ -116,4 +116,14 @@ describe("acme-todo API", () => {
     const created = await request(app).post("/api/todos").send({ text: "X" }).expect(201);
     await request(app).patch(`/api/todos/${created.body.id}`).send({}).expect(400);
   });
+
+  it("serves index.html with theme toggle button", async () => {
+    const res = await request(app).get("/").expect(200);
+    assert.ok(res.text.includes("id=\"theme-toggle\""), "should contain #theme-toggle element");
+  });
+
+  it("serves index.html with theme-init.js script", async () => {
+    const res = await request(app).get("/").expect(200);
+    assert.ok(res.text.includes("theme-init.js"), "should reference theme-init.js");
+  });
 });
