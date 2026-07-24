@@ -6,12 +6,16 @@ Acme Todo is the disposable target application used to test Helix planning, impl
 
 | Project | Local path | Responsibility |
 |---|---|---|
-| Primer | `~/Desktop/acme/primer` | Knowledge product and fictional Acme evidence corpus; not currently part of the runtime loop. |
+| Primer | `~/Desktop/acme/primer` | Knowledge product and fictional Acme evidence corpus; outside the Issues → Helix runtime loop. |
+| Prelude | `~/Desktop/acme/prelude` | Project inception drafting and bootstrap artifact export for a future Helix empty-workspace runtime. |
 | Helix | `~/Desktop/acme/helix` | Agent workflow control plane that receives work and orchestrates changes. |
 | Acme Issues | `~/Desktop/acme/acme-issues` | Local issue tracker and webhook harness that triggers Helix and receives callbacks. |
+| Acme Projects | `~/Desktop/acme/acme-projects` | Feature-idea and collaboration board for existing Helix repos; can manually create non-triggering issues through Acme Issues. |
 | Acme Todo | `~/Desktop/acme/acme-todo` | Disposable target application used for agent implementation and verification. |
 
-The normal local flow is Acme Issues → Helix → Acme Todo, followed by a Helix completion callback to Acme Issues. Primer shares the fictional Acme context but is not currently in that runtime path.
+Existing-repo flow: Acme Issues → Helix → Acme Todo, followed by a Helix completion callback to Acme Issues. Primer shares the fictional Acme context but is not in that runtime path. Prelude is used when inventing a new project before a Helix repo exists.
+
+Intended feature flow for this existing target begins with a ready Acme Projects card, continues through a linked Acme Issues implementation issue, and then reaches Helix. Acme Projects does not call Helix directly.
 
 ## Working rules
 

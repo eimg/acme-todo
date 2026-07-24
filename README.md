@@ -4,16 +4,22 @@ A minimal local todo list — one project, one list. Independent from Helix and 
 
 ## Acme development testbed
 
-Acme Todo is one of four related projects. They remain separate products with separate responsibilities.
+Acme Todo is one of six related projects. They remain separate products with separate responsibilities.
 
 | Project | Role |
 |---|---|
-| **[Primer](https://github.com/eimg/primer)** | Knowledge product and fictional Acme evidence corpus; not currently part of the runtime loop. |
+| **[Primer](https://github.com/eimg/primer)** | Knowledge product and fictional Acme evidence corpus; not currently part of the Issues → Helix runtime loop. |
+| **[Prelude](https://github.com/eimg/prelude)** | Project inception workspace; exports bootstrap artifacts for a future Helix empty-workspace runtime. |
 | **[Helix](https://github.com/eimg/helix)** | Agent workflow control plane that receives work and orchestrates changes. |
 | **[Acme Issues](https://github.com/eimg/acme-issues)** | Local issue tracker and webhook harness that triggers Helix and receives callbacks. |
+| **[Acme Projects](https://github.com/eimg/acme-projects)** | Feature-idea and collaboration board for existing Helix repos; can manually create non-triggering issues through Acme Issues. |
 | **[Acme Todo](https://github.com/eimg/acme-todo)** | Disposable target application used for agent implementation and verification. |
 
-Typical exercise: Acme Issues sends a work item to Helix, which makes and verifies changes in Acme Todo. Primer develops the separate knowledge and retrieval side of the same fictional Acme context.
+Typical exercise: Acme Issues sends a work item to Helix, which makes and verifies changes in Acme Todo. Primer develops the separate knowledge side of the same fictional Acme context. Prelude is used when inventing a new project before a Helix repo exists.
+
+In the planned feature flow for this existing target, Acme Projects requests a
+linked implementation issue from Acme Issues, and Acme Issues triggers Helix
+against this repository. Acme Projects does not call Helix directly.
 
 ## Quick start
 
