@@ -7,7 +7,7 @@ Acme Todo is the disposable target application used to test Helix planning, impl
 | Project | Local path | Responsibility |
 |---|---|---|
 | Primer | `~/Desktop/acme/primer` | Knowledge product and fictional Acme evidence corpus; outside the Issues → Helix runtime loop. |
-| Prelude | `~/Desktop/acme/prelude` | Project inception drafting and bootstrap artifact export for a future Helix empty-workspace runtime. |
+| Prelude | `~/Desktop/acme/prelude` | Project inception drafting and bootstrap artifact export for Helix empty-workspace bootstrap. |
 | Helix | `~/Desktop/acme/helix` | Agent workflow control plane that receives work and orchestrates changes. |
 | Acme Issues | `~/Desktop/acme/acme-issues` | Local issue tracker and webhook harness that triggers Helix and receives callbacks. |
 | Acme Projects | `~/Desktop/acme/acme-projects` | Feature-idea and collaboration board for existing Helix repos; can manually create non-triggering issues through Acme Issues. |
