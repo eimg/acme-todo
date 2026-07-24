@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import type Database from "better-sqlite3";
 import { createTodo, deleteTodo, updateTodo, listTodos, clearDone } from "./todos.js";
-import { DEFAULT_PORT, VALID_PRIORITIES, type Priority } from "./types.js";
+import { DEFAULT_PORT } from "./types.js";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 60;
@@ -64,19 +64,12 @@ export function createApp(opts: CreateAppOptions): Express {
 
   app.post("/api/todos", rateLimit, (req, res) => {
     try {
-      const body = req.body as { text?: string; priority?: string };
+      const body = req.body as { text?: string };
       if (typeof body.text !== "string") {
         res.status(400).json({ error: "text is required" });
         return;
       }
-      if (body.priority !== undefined && !VALID_PRIORITIES.includes(body.priority as Priority)) {
-        res.status(400).json({ error: "priority must be low, medium, or high" });
-        return;
-      }
-      const todo = createTodo(db, {
-        text: body.text,
-        priority: body.priority as Priority | undefined,
-      });
+      const todo = createTodo(db, { text: body.text });
       res.status(201).json(todo);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -90,23 +83,17 @@ export function createApp(opts: CreateAppOptions): Express {
       res.status(400).json({ error: "invalid id" });
       return;
     }
-    const body = req.body as { text?: string; done?: boolean; priority?: string };
+    const body = req.body as { text?: string; done?: boolean };
     const hasText = typeof body.text === "string";
     const hasDone = typeof body.done === "boolean";
-    const hasPriority = typeof body.priority === "string";
-    if (!hasText && !hasDone && !hasPriority) {
+    if (!hasText && !hasDone) {
       res.status(400).json({ error: "no valid fields to update" });
-      return;
-    }
-    if (hasPriority && !VALID_PRIORITIES.includes(body.priority as Priority)) {
-      res.status(400).json({ error: "priority must be low, medium, or high" });
       return;
     }
     try {
       const todo = updateTodo(db, id, {
         text: hasText ? body.text : undefined,
         done: hasDone ? body.done : undefined,
-        priority: hasPriority ? (body.priority as Priority) : undefined,
       });
       if (!todo) {
         res.status(404).json({ error: "Todo not found" });

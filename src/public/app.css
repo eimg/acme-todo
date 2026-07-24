@@ -77,41 +77,6 @@ body {
   font: inherit;
 }
 
-.priority-select {
-  flex: 0 0 auto;
-  min-width: 90px;
-  cursor: pointer;
-}
-
-.priority-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  white-space: nowrap;
-  pointer-events: none;
-  cursor: default;
-  user-select: none;
-}
-
-.priority-high {
-  background: #e35d6a;
-  color: #fff;
-}
-
-.priority-medium {
-  background: #d4a843;
-  color: #1a1a1a;
-}
-
-.priority-low {
-  background: #3ecf8e;
-  color: #1a1a1a;
-}
-
 .btn {
   background: var(--accent);
   color: #fff;
@@ -234,19 +199,6 @@ body {
   padding: 0.4rem 0.6rem;
   font: inherit;
   font-size: 0.95rem;
-}
-
-.todo-edit-select {
-  flex: 0 0 auto;
-  min-width: 90px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
-  font: inherit;
-  font-size: 0.95rem;
-  cursor: pointer;
 }
 
 .todo-edit-input:focus {

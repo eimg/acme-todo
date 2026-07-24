@@ -27,7 +27,6 @@ const emptyEl = document.getElementById("empty");
 const countEl = document.getElementById("todo-count");
 const form = document.getElementById("add-form");
 const input = document.getElementById("new-todo");
-const prioritySelect = document.getElementById("priority-select");
 
 let todos = [];
 
@@ -73,11 +72,10 @@ function render() {
   listEl.innerHTML = todos
     .map(
       (todo) => `
-      <li class="todo-item ${todo.done ? "done" : ""}" data-id="${todo.id}" data-text="${escapeHtml(todo.text)}" data-priority="${todo.priority || 'medium'}">
+      <li class="todo-item ${todo.done ? "done" : ""}" data-id="${todo.id}" data-text="${escapeHtml(todo.text)}">
         <div class="todo-main">
           <input class="todo-check" type="checkbox" ${todo.done ? "checked" : ""} aria-label="Toggle done" />
           <span class="todo-text">${escapeHtml(todo.text)}</span>
-          <span class="priority-badge priority-${todo.priority || 'medium'}">${todo.priority || 'medium'}</span>
         </div>
         <div class="todo-actions">
           <button class="todo-edit" type="button" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
@@ -113,7 +111,7 @@ form.addEventListener("submit", async (e) => {
   if (!text) return;
   await api("/api/todos", {
     method: "POST",
-    body: JSON.stringify({ text, priority: prioritySelect.value }),
+    body: JSON.stringify({ text }),
   });
   input.value = "";
   await loadTodos();
@@ -123,30 +121,17 @@ function startEdit(item, id) {
   const textSpan = item.querySelector(".todo-text");
   const actionsDiv = item.querySelector(".todo-actions");
   const check = item.querySelector(".todo-check");
-  const badge = item.querySelector(".priority-badge");
   const mainDiv = item.querySelector(".todo-main");
   const originalText = item.dataset.text;
-  const originalPriority = item.dataset.priority;
 
   actionsDiv.style.display = "none";
   check.style.display = "none";
   textSpan.style.display = "none";
-  if (badge) badge.style.display = "none";
 
   const inputEl = document.createElement("input");
   inputEl.className = "todo-edit-input";
   inputEl.value = originalText;
   inputEl.maxLength = 1000;
-
-  const editPrioritySelect = document.createElement("select");
-  editPrioritySelect.className = "todo-edit-select";
-  for (const level of ["low", "medium", "high"]) {
-    const opt = document.createElement("option");
-    opt.value = level;
-    opt.textContent = level.charAt(0).toUpperCase() + level.slice(1);
-    if (level === originalPriority) opt.selected = true;
-    editPrioritySelect.appendChild(opt);
-  }
 
   const saveBtn = document.createElement("button");
   saveBtn.className = "todo-save";
@@ -159,7 +144,6 @@ function startEdit(item, id) {
   cancelBtn.textContent = "Cancel";
 
   mainDiv.appendChild(inputEl);
-  mainDiv.appendChild(editPrioritySelect);
   mainDiv.appendChild(saveBtn);
   mainDiv.appendChild(cancelBtn);
 
@@ -176,7 +160,7 @@ function startEdit(item, id) {
     try {
       await api(`/api/todos/${id}`, {
         method: "PATCH",
-        body: JSON.stringify({ text: newValue, priority: editPrioritySelect.value }),
+        body: JSON.stringify({ text: newValue }),
       });
       await loadTodos();
     } catch (err) {

@@ -29,8 +29,8 @@ npm run dev
 | Method | Path | Purpose |
 |--------|------|---------|
 | `GET` | `/api/todos` | List todos (open first, then done) |
-| `POST` | `/api/todos` | `{ "text": "...", "priority": "low|medium|high" }` (priority optional, default "medium") |
-| `PATCH` | `/api/todos/:id` | `{ "done": true }`, `{ "text": "..." }`, or `{ "priority": "high" }` |
+| `POST` | `/api/todos` | `{ "text": "..." }` |
+| `PATCH` | `/api/todos/:id` | `{ "done": true }` or `{ "text": "..." }` |
 | `DELETE` | `/api/todos/:id` | Remove todo |
 | `DELETE` | `/api/todos/clear` | Remove all done todos |
 | `GET` | `/api/hello` | Say hello |

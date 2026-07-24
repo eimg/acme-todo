@@ -39,10 +39,4 @@ function migrate(db: Database.Database): void {
 
     CREATE INDEX IF NOT EXISTS idx_todos_done ON todos(done);
   `);
-
-  // Add priority column if it doesn't already exist
-  const cols = db.prepare("PRAGMA table_info(todos)").all() as { name: string }[];
-  if (!cols.some((c) => c.name === "priority")) {
-    db.exec("ALTER TABLE todos ADD COLUMN priority TEXT NOT NULL DEFAULT 'medium'");
-  }
 }
